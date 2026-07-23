@@ -36,13 +36,13 @@ jobs:
 
       - name: Check installed chromium
         run: |
-          ls /usr/local/share/chromium
+          ls -R /usr/local/share/chromium
 
       - name: Get Playwright Version
         id: get-playwright-version
         run: |
           PLAYWRIGHT_VERSION=$(
-            pnpm exec playwright --version
+            pnpm exec playwright --version \
               | sed "s/Version //"
           )
           echo "PLAYWRIGHT_VERSION=${PLAYWRIGHT_VERSION}" >> "$GITHUB_OUTPUT"
