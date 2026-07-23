@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    types: [opened, synchronize]
+
+permissions: {} # Each job defines its own permissions explicitly
+
+jobs:
+  build:
+    name: Build
+    permissions:
+      contents: read # Access to check out code and install dependencies
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v7
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Set up Node.js environment
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Env
+        run: env
+
+      - name: Env
+        run: env
+
+      - name: Test
+        run: |
+          pnpm exec playwright install --with-deps chromium
+          pnpm run test
+
+      - name: What has playwright installed?
+        run: |
+          ls -R ~/.cache/ms-playwright
