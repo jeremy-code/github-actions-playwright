@@ -34,8 +34,25 @@ jobs:
       - name: Env
         run: env
 
-      - name: Env
-        run: env
+      - name: Check installed chromium
+        run: |
+          ls /usr/local/share/chromium
+
+      - name: Get Playwright Version
+        id: get-playwright-version
+        run: |
+          PLAYWRIGHT_VERSION=$(
+            pnpm exec playwright --version
+              | sed "s/Version //"
+          )
+          echo "PLAYWRIGHT_VERSION=${PLAYWRIGHT_VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          key: playwright-${{ steps.get-playwright-version.outputs.PLAYWRIGHT_VERSION }}
+          path: |
+            ~/.cache/ms-playwright
 
       - name: Test
         run: |
